@@ -7,35 +7,37 @@
 
 import XCTest
 
-class EasyBankPage {
-    let app = XCUIApplication()
-
-    // MARK: - 1. Onboarding Screen
+class EasyBankPage: BaseClass {
     var onboardingLoginButton: XCUIElement { app.buttons["onboarding.login"] }
     var onboardingRegisterButton: XCUIElement { app.buttons["onboarding.register"] }
 
-    // MARK: - 2. Login Screen
-    var loginEmailTextField: XCUIElement { app.textFields["login.email"] }
-    var loginPasswordSecureField: XCUIElement { app.secureTextFields["login.password"] }
+    var loginEmailField: XCUIElement { app.textFields["login.email"] }
+    var loginPasswordField: XCUIElement { app.secureTextFields["login.password"] }
     var loginSubmitButton: XCUIElement { app.buttons["login.submit"] }
-    var loginRegisterButton: XCUIElement { app.buttons["login.register"] }
     var loginErrorText: XCUIElement { app.staticTexts["login.error"] }
 
-    // MARK: - 3. Registration Screen
-    var registrationEmailTextField: XCUIElement { app.textFields["registration.email"] }
-    var registrationPasswordSecureField: XCUIElement { app.secureTextFields["registration.password"] }
-    var registrationRepeatPasswordSecureField: XCUIElement { app.secureTextFields["registration.repeatPassword"] }
+    var registrationEmailField: XCUIElement { app.textFields["registration.email"] }
+    var registrationPasswordField: XCUIElement { app.secureTextFields["registration.password"] }
+    var registrationRepeatPasswordField: XCUIElement { app.secureTextFields["registration.repeatPassword"] }
     var registrationSubmitButton: XCUIElement { app.buttons["registration.submit"] }
-    var registrationLoginButton: XCUIElement { app.buttons["registration.login"] }
     var registrationErrorText: XCUIElement { app.staticTexts["registration.error"] }
 
-    // MARK: - 4. Home Screen
-    var homeTabButton: XCUIElement { app.tabBars.buttons["Home"] }
-    var homeSendMoneyButton: XCUIElement { app.buttons["home.sendMoney"] }
-    var homeLogoutButton: XCUIElement { app.buttons["home.logout"] }
+    var springboard: XCUIApplication { XCUIApplication(bundleIdentifier: "com.apple.springboard") }
+    var strongPasswordCloseButtons: [XCUIElement] { [app.buttons["Close"], springboard.buttons["Close"]] }
 
-    // MARK: - 5. Logout Confirmation Alert
+    var settingsApp: XCUIApplication { XCUIApplication(bundleIdentifier: "com.apple.Preferences") }
+    var settingsGeneralRow: XCUIElement { settingsRow("General") }
+    var settingsAutoFillRow: XCUIElement { settingsRow("AutoFill & Passwords") }
+    var settingsAutoFillSwitch: XCUIElement { settingsApp.switches["AutoFill Passwords and Passkeys"] }
+
+    var homeTabButton: XCUIElement { app.tabBars.buttons["Home"] }
+    var sendMoneyButton: XCUIElement { app.buttons["home.sendMoney"] }
+    var logoutButton: XCUIElement { app.buttons["home.logout"] }
+
     var logoutAlert: XCUIElement { app.alerts["Logging Out"] }
     var logoutConfirmButton: XCUIElement { logoutAlert.buttons["Yes"] }
-    var logoutCancelButton: XCUIElement { logoutAlert.buttons["No"] }
+
+    private func settingsRow(_ label: String) -> XCUIElement {
+        settingsApp.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label)).firstMatch
+    }
 }

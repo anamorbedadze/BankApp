@@ -1,49 +1,30 @@
-import XCTest
+final class BankingFlowTests: EasyBankSteps {
+    private let testPassword = "Qa!Test#2026"
 
-class BankingFlowTests: BaseClass {
-    
-    let steps = EasyBankSteps()
-    
-    func testInvalidEmailFormat() {
-        steps.tapOnboardingLogin()
-        
-        steps.enterLoginEmail("invalid-email")
-        steps.enterLoginPassword("TestPassword123")
-        steps.tapLoginSubmit()
-        
-        steps.verifyLoginErrorMessageContains("badly formatted")
+    func testLoginWithInvalidEmailFormatShowsError() {
+        openLoginForm()
+        submitLogin(email: "invalid-email", password: testPassword)
+        verifyLoginError(contains: "badly formatted")
     }
-    
-    func testInvalidLoginCredentials() {
-        steps.tapOnboardingLogin()
-        
-        steps.enterLoginEmail("notregistered@example.com")
-        steps.enterLoginPassword("TestPassword123")
-        steps.tapLoginSubmit()
-        
-        steps.verifyLoginErrorMessageContains("malformed or has expired")
+
+    func testLoginWithUnregisteredCredentialsShowsError() {
+        openLoginForm()
+        submitLogin(email: uniqueEmail(), password: testPassword)
+        verifyLoginError(contains: "malformed or has expired")
     }
-    
-    func testRegisterLogoutLogin() {
-        steps.tapOnboardingRegister()
-        
-        let uniqueEmail = "\(UUID().uuidString)@test.com"
-        let strongPassword = "StrongPassword123!"
-        
-        steps.enterRegistrationEmail(uniqueEmail)
-        steps.enterRegistrationPassword(strongPassword)
-        steps.enterRegistrationRepeatPassword(strongPassword)
-        steps.tapRegistrationSubmit()
-        
-        steps.verifyHomeScreenIsDisplayed()
-        
-        steps.tapLogout()
-        steps.confirmLogout()
-        
-        steps.enterLoginEmail(uniqueEmail)
-        steps.enterLoginPassword(strongPassword)
-        steps.tapLoginSubmit()
-        
-        steps.verifyHomeScreenIsDisplayed()
+
+    func testRegisterLogoutAndLogin() {
+        let email = uniqueEmail()
+
+        disablePasswordAutoFill()
+        openRegistrationForm()
+        submitRegistration(email: email, password: testPassword)
+        verifyHomeScreenDisplayed()
+
+        logOut()
+        verifyLoginFormDisplayed()
+
+        submitLogin(email: email, password: testPassword)
+        verifyHomeScreenDisplayed()
     }
 }
