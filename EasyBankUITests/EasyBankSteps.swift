@@ -34,6 +34,25 @@ class EasyBankSteps {
         XCTAssertTrue(page.loginErrorText.label.contains(text), "Error message should contain '\(text)', but got '\(page.loginErrorText.label)'")
     }
     
+    // MARK: - Registration Helper
+    private func typePasswordWithPromptHandling(field: XCUIElement, password: String) {
+        field.tap()
+        
+       
+        let alertCloseButton = app.alerts.buttons["Close"]
+        let normalCloseButton = app.buttons["Close"]
+        
+        if alertCloseButton.waitForExistence(timeout: 1.5) {
+            alertCloseButton.tap()
+            field.tap() 
+        } else if normalCloseButton.waitForExistence(timeout: 0.5) {
+            normalCloseButton.tap()
+            field.tap() 
+        }
+        
+        field.typeText(password)
+    }
+    
     // MARK: - Registration Actions
     func enterRegistrationEmail(_ email: String) {
         page.registrationEmailTextField.tap()
@@ -41,21 +60,11 @@ class EasyBankSteps {
     }
     
     func enterRegistrationPassword(_ password: String) {
-        page.registrationPasswordSecureField.tap()
-        
-        let closeButton = app.buttons["Close"]
-        if closeButton.waitForExistence(timeout: 2.0) {
-            closeButton.tap()
-            page.registrationPasswordSecureField.tap() 
-        }
-        
-        page.registrationPasswordSecureField.typeText(password)
+        typePasswordWithPromptHandling(field: page.registrationPasswordSecureField, password: password)
     }
     
-    
     func enterRegistrationRepeatPassword(_ password: String) {
-        page.registrationRepeatPasswordSecureField.tap()
-        page.registrationRepeatPasswordSecureField.typeText(password)
+        typePasswordWithPromptHandling(field: page.registrationRepeatPasswordSecureField, password: password)
     }
     
     func tapRegistrationSubmit() {
