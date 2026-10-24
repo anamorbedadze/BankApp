@@ -25,6 +25,9 @@ class EasyBankSteps {
     }
 
     func tapLoginSubmit() {
+        if app.keyboards.buttons["return"].exists {
+            app.keyboards.buttons["return"].tap()
+        }
         page.loginSubmitButton.tap()
     }
 
@@ -48,9 +51,6 @@ class EasyBankSteps {
             }
         }
         
-        // კრიტიკული შესწორება: ყოველთვის ვაჭერთ ველს მეორედ ტექსტის შეყვანამდე.
-        // ეს აიგნორებს iOS-ის ავტომატურ ყვითელ ფენას და გარანტირებულად სვამს კურსორს ველში.
-        field.tap()
         
         field.typeText(password)
     }
@@ -70,6 +70,9 @@ class EasyBankSteps {
     }
     
     func tapRegistrationSubmit() {
+        if app.keyboards.buttons["return"].exists {
+            app.keyboards.buttons["return"].tap()
+        }
         page.registrationSubmitButton.tap()
     }
     
