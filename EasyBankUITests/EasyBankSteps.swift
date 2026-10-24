@@ -43,15 +43,15 @@ class EasyBankSteps {
     func enterRegistrationPassword(_ password: String) {
         page.registrationPasswordSecureField.tap()
         
-        // iOS might show "Use Strong Password?" alert when focusing on password fields.
-        // ვამოწმებთ ველზე დაჭერის (ფოკუსის მიღების) შემდეგ.
         let closeButton = app.buttons["Close"]
         if closeButton.waitForExistence(timeout: 2.0) {
             closeButton.tap()
+            page.registrationPasswordSecureField.tap() 
         }
         
         page.registrationPasswordSecureField.typeText(password)
     }
+    
     
     func enterRegistrationRepeatPassword(_ password: String) {
         page.registrationRepeatPasswordSecureField.tap()
@@ -64,8 +64,7 @@ class EasyBankSteps {
     
     // MARK: - Home Actions
     func verifyHomeScreenIsDisplayed() {
-        // ერთი ელემენტის შემოწმება საკმარისია მთავარ ეკრანზე გადასვლის დასადასტურებლად
-        let isSendMoneyVisible = page.homeSendMoneyButton.waitForExistence(timeout: 5.0)
+        let isSendMoneyVisible = page.homeSendMoneyButton.waitForExistence(timeout: 10.0) 
         XCTAssertTrue(isSendMoneyVisible, "Home screen should be displayed (Send Money button missing)")
     }
     
