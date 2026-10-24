@@ -38,17 +38,19 @@ class EasyBankSteps {
     private func typePasswordWithPromptHandling(field: XCUIElement, password: String) {
         field.tap()
         
-       
         let alertCloseButton = app.alerts.buttons["Close"]
-        let normalCloseButton = app.buttons["Close"]
-        
         if alertCloseButton.waitForExistence(timeout: 1.5) {
             alertCloseButton.tap()
-            field.tap() 
-        } else if normalCloseButton.waitForExistence(timeout: 0.5) {
-            normalCloseButton.tap()
-            field.tap() 
+        } else {
+            let normalCloseButton = app.buttons["Close"]
+            if normalCloseButton.waitForExistence(timeout: 0.5) {
+                normalCloseButton.tap()
+            }
         }
+        
+        // კრიტიკული შესწორება: ყოველთვის ვაჭერთ ველს მეორედ ტექსტის შეყვანამდე.
+        // ეს აიგნორებს iOS-ის ავტომატურ ყვითელ ფენას და გარანტირებულად სვამს კურსორს ველში.
+        field.tap()
         
         field.typeText(password)
     }
